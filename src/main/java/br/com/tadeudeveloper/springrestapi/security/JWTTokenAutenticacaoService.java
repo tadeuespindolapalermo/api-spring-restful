@@ -47,9 +47,7 @@ public class JWTTokenAutenticacaoService {
 		// adiciona token no cabeçalho http
 		response.addHeader(HEADER_STRING, token); // Authorization: Bearer 3498hih345jkh345ui53iu5hyi
 		
-		// Resolve o problema do blocked by CORS policy
-		// Libera resposta para porta diferente do projeto Angular
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		liberarCORS(response);
 		
 		// adiciona token como resposta no corpo do http
 		response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
@@ -83,8 +81,23 @@ public class JWTTokenAutenticacaoService {
 				}
 			}
 		}	
-		response.addHeader("Access-Control-Allow-Origin", "*");
+		liberarCORS(response);
 		return null;
+	}
+
+	// CORS policy
+	private void liberarCORS(HttpServletResponse response) {
+		if (response.getHeader("Access-Control-Allow-Origin") == null) {
+			response.addHeader("Access-Control-Allow-Origin", "*");		
+		}
+		
+		if (response.getHeader("Access-Control-Allow-Headers") == null) {
+			response.addHeader("Access-Control-Allow-Headers", "*");		
+		}
+		
+		if (response.getHeader("Access-Control-Request-Headers") == null) {
+			response.addHeader("Access-Control-Request-Headers", "*");		
+		}
 	}
 
 }

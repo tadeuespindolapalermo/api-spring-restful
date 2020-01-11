@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.tadeudeveloper.springrestapi.model.Usuario;
 import br.com.tadeudeveloper.springrestapi.repository.UsuarioRepository;
 
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 @RestController /*Arquitetura REST*/
 @RequestMapping(value = "/usuario")
 public class IndexController {
@@ -93,7 +93,7 @@ public class IndexController {
 		return ResponseEntity.ok(usuario);
 	}	
 	
-	@GetMapping(value = "/", produces = "application/json", headers = "X-API-Version=v1")
+	@GetMapping(value = "/v1", produces = "application/json", headers = "X-API-Version=v1")
 	@Cacheable("cacheusuarios")
 	public ResponseEntity<List<Usuario>> buscarTodosV1() throws InterruptedException {
 		
@@ -103,11 +103,18 @@ public class IndexController {
 		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/", produces = "application/json", headers = "X-API-Version=v2")
+	@GetMapping(value = "/v2", produces = "application/json", headers = "X-API-Version=v2")
 	public ResponseEntity<List<Usuario>> buscarTodosV2() {
 		
 		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();		
 		System.out.println("Buscar Todos V2");
+		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/", produces = "application/json")
+	public ResponseEntity<List<Usuario>> buscarTodos() {
+		
+		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();				
 		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	

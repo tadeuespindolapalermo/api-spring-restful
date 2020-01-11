@@ -2,6 +2,7 @@ package br.com.tadeudeveloper.springrestapi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +29,9 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter {
 		// Ativa permissão para acesso a página inicial
 		.disable().authorizeRequests().antMatchers("/").permitAll()		
 		.antMatchers("/index").permitAll()
+		
+		// Liberação do CORS
+		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 		
 		// URL de logout - Redireciona após deslogar do sistema
 		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")
