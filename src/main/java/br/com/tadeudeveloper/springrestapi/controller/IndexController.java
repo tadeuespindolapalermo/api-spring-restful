@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +113,7 @@ public class IndexController {
 	}
 	
 	@GetMapping(value = "/", produces = "application/json")
+	@CachePut("cacheusuarios")
 	public ResponseEntity<List<Usuario>> buscarTodos() {
 		
 		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findAll();				
