@@ -120,6 +120,14 @@ public class IndexController {
 		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/usuarioPorNome/{nome}", produces = "application/json")
+	@CachePut("cacheusuarios")
+	public ResponseEntity<List<Usuario>> buscarUsuarioPorNome(@PathVariable("nome") String nome) {
+		
+		List<Usuario> usuarios = (List<Usuario>) usuarioRepository.findByNomeContainingIgnoreCase(nome);				
+		return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/", produces = "application/json")
 	public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario) {
 		
