@@ -30,7 +30,7 @@ public class IndexController {
 	private UsuarioRepository usuarioRepository;		
 	
 	@GetMapping(value = "/{id}", produces = "application/json")
-	@Cacheable("cacheuser")
+	@CachePut("cacheuser")
 	public ResponseEntity<Usuario> buscarPorId(@PathVariable(value = "id") Long id) {		
 		Usuario usuario = usuarioRepository.findById(id).get();			
 		return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
@@ -104,7 +104,7 @@ public class IndexController {
 			usuario.getTelefones().get(pos).setUsuario(usuario);
 		}
 		
-		Usuario userTemp = usuarioRepository.findUserByLogin(usuario.getLogin());
+		Usuario userTemp = usuarioRepository.findById(usuario.getId()).get();
 		
 		if (!userTemp.getSenha().equals(usuario.getSenha())) {
 			String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());

@@ -70,7 +70,7 @@ public class Usuario implements UserDetails {
 								name = "role_fk",
 								value = ConstraintMode.CONSTRAINT))
 	)
-	private List<Role> roles;
+	private List<Role> roles = new ArrayList<>();
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
