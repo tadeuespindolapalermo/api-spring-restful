@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tadeudeveloper.springrestapi.model.Usuario;
 import br.com.tadeudeveloper.springrestapi.repository.UsuarioRepository;
+import br.com.tadeudeveloper.springrestapi.service.ImplementacaoUserDetailsService;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -28,6 +29,9 @@ public class IndexController {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;		
+	
+	@Autowired
+	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
 	
 	@GetMapping(value = "/{id}", produces = "application/json")
 	@CachePut("cacheuser")
@@ -92,6 +96,8 @@ public class IndexController {
 		String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.getSenha());
 		usuario.setSenha(senhaCriptografada);
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
+		
+		implementacaoUserDetailsService.inserirAcessoPadrao(usuario.getId());
 		
 		return new ResponseEntity<Usuario>(usuarioSalvo, HttpStatus.OK);		
 	}

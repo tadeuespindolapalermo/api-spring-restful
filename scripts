@@ -1,0 +1,11 @@
+AULAS
+Inserindo usuário padrão ao cadastrar - Parte 1
+Inserindo usuário padrão ao cadastrar no controller - Parte 2
+
+SELECT constraint_name from information_schema.constraint_column_usage where table_name = 'usuarios_role' and column_name = 'role_id' and constraint_name <> 'unique_role_user';
+
+alter table usuarios_role DROP CONSTRAINT uk_krvk2qx218dxa3ogdyplk0wxw;
+
+insert into usuarios_role (usuario_id, role_id) values (12, (select id from role where nome_role = 'ROLE_USER'));
+
+select * from usuarios_role;

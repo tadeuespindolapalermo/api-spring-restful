@@ -44,34 +44,39 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 		objetoError.setCode(status.value() + " ==> " + status.getReasonPhrase());
 		
 		return new ResponseEntity<>(objetoError, headers, status);
-	}
+	}	
 	
-	// Tratamento geral (maioria dos erros a nível do banco de dados)	
 	@ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class, PSQLException.class, SQLException.class})
 	protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex) {		
 		
-		String msg = ex.getMessage();
+		String msg = ex.getMessage();		
 		
 		if (ex instanceof DataIntegrityViolationException) {
 			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
+			setErrorMessage(msg);
 		}
 		
 		if (ex instanceof ConstraintViolationException) {
 			msg = ((ConstraintViolationException) ex).getCause().getCause().getMessage();
+			setErrorMessage(msg) ;
 		}
 		
 		if (ex instanceof PSQLException) {
 			msg = ((PSQLException) ex).getCause().getCause().getMessage();
+			setErrorMessage(msg) ;
 		}
 		
 		if (ex instanceof SQLException) {
 			msg = ((SQLException) ex).getCause().getCause().getMessage();
-		}	
-		
+			setErrorMessage(msg);
+		}			
+		return setErrorMessage(msg);
+	}
+	
+	private ResponseEntity<Object> setErrorMessage(String msg) {
 		ObjetoError objetoError = new ObjetoError();
 		objetoError.setError(msg);
 		objetoError.setCode(HttpStatus.INTERNAL_SERVER_ERROR + " ==> " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-		
 		return new ResponseEntity<>(objetoError, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
