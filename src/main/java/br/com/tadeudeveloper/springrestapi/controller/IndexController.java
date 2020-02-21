@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tadeudeveloper.springrestapi.model.Usuario;
+import br.com.tadeudeveloper.springrestapi.repository.TelefoneRepository;
 import br.com.tadeudeveloper.springrestapi.repository.UsuarioRepository;
 import br.com.tadeudeveloper.springrestapi.service.ImplementacaoUserDetailsService;
 
@@ -32,6 +33,9 @@ public class IndexController {
 	
 	@Autowired
 	private ImplementacaoUserDetailsService implementacaoUserDetailsService;
+	
+	@Autowired
+	private TelefoneRepository telefoneRepository;
 	
 	@GetMapping(value = "/{id}", produces = "application/json")
 	@CachePut("cacheuser")
@@ -132,6 +136,12 @@ public class IndexController {
 	public String delete(@PathVariable("id") Long id) {		
 		usuarioRepository.deleteById(id);		
 		return  "ok";		
-	}		
+	}
+	
+	@DeleteMapping(value = "/removerTelefone/{id}", produces = "application/text")
+	public String deleteTelefone(@PathVariable("id") Long id) {
+		telefoneRepository.deleteById(id);
+		return "ok";
+	}
 	
 }

@@ -73,6 +73,7 @@ public class Usuario implements UserDetails {
 	private List<Role> roles = new ArrayList<>();
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
 	}
