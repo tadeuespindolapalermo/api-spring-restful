@@ -2,6 +2,7 @@ package br.com.tadeudeveloper.springrestapi.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,12 +17,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -71,10 +76,20 @@ public class Usuario implements UserDetails {
 								value = ConstraintMode.CONSTRAINT))
 	)
 	private List<Role> roles = new ArrayList<>();
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(iso = ISO.DATE, pattern = "dd/MM/yyyy")
+	private Date dataNascimento;
 
-	@Override
+	/*@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}*/
+	
+	@Override
+	public Collection<Role> getAuthorities() {
 		return roles;
 	}
 
@@ -160,6 +175,14 @@ public class Usuario implements UserDetails {
 	
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+	
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+	
+	public Date getDataNascimento() {
+		return dataNascimento;
 	}
 
 	@Override
