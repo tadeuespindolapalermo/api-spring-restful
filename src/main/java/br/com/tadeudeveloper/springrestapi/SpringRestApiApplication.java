@@ -15,9 +15,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"br.com.tadeudeveloper.springrestapi.model"}) // varre pacotes de modelo
-@ComponentScan(basePackages = {"br.*"}) // varre todo o projeto - injeção de dependências
-@EnableJpaRepositories(basePackages = {"br.com.tadeudeveloper.springrestapi.repository"}) // habilita persistência
+@EntityScan(basePackages = { "br.com.tadeudeveloper.springrestapi.model" }) // varre pacotes de modelo
+@ComponentScan(basePackages = { "br.*" }) // varre todo o projeto - injeção de dependências
+@EnableJpaRepositories(basePackages = { "br.com.tadeudeveloper.springrestapi.repository" }) // habilita persistência
 @EnableTransactionManagement // controle transacional (gerência de transações)
 @EnableWebMvc // habilita MVC
 @RestController // habilita REST (retorno de JSON)
@@ -29,15 +29,18 @@ public class SpringRestApiApplication implements WebMvcConfigurer {
 		SpringApplication.run(SpringRestApiApplication.class, args);
 		System.out.println(new BCryptPasswordEncoder().encode("123"));
 	}
-	
+
 	// Libera acesso às origens específicas (mapeamento global)
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		//registry.addMapping("/**"); // todos
+		
 		registry.addMapping("/usuario/**")
-		.allowedMethods("POST", "PUT", "DELETE") // todos os endpoints do usuario
-		.allowedOrigins("localhost:8080", "www.google.com");
+			.allowedMethods("*")
+			.allowedOrigins("*");
+
+		registry.addMapping("/profissao/**")
+			.allowedMethods("*")
+			.allowedOrigins("*");
 	}
 
 }
-
