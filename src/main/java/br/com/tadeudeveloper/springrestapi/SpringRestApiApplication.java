@@ -41,6 +41,10 @@ public class SpringRestApiApplication implements WebMvcConfigurer {
 		registry.addMapping("/profissao/**")
 			.allowedMethods("*")
 			.allowedOrigins("*");
+		
+		registry.addMapping("/recuperar/**")
+			.allowedMethods("*")
+			.allowedOrigins("*");
 	}
 
 }

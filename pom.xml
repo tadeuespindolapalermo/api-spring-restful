@@ -50,7 +50,7 @@
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>			
+			<artifactId>postgresql</artifactId>
 		</dependency>
 
 		<dependency>
@@ -88,10 +88,22 @@
 			<artifactId>HikariCP</artifactId>
 			<!-- <version>3.3.1</version> -->
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.6.0</version>
+		</dependency>-->
+
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<!-- <version>1.6.0</version>-->
 		</dependency>
 
 	</dependencies>
