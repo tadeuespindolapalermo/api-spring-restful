@@ -2,6 +2,9 @@ package br.com.tadeudeveloper.springrestapi.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,6 +28,7 @@ import br.com.tadeudeveloper.springrestapi.model.Usuario;
 import br.com.tadeudeveloper.springrestapi.repository.TelefoneRepository;
 import br.com.tadeudeveloper.springrestapi.repository.UsuarioRepository;
 import br.com.tadeudeveloper.springrestapi.service.ImplementacaoUserDetailsService;
+import br.com.tadeudeveloper.springrestapi.service.ServiceRelatorio;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -39,6 +43,9 @@ public class IndexController {
 
 	@Autowired
 	private TelefoneRepository telefoneRepository;
+	
+	@Autowired
+	private ServiceRelatorio serviceRelatorio;
 
 	@GetMapping(value = "/{id}", produces = "application/json")
 	@CachePut("cacheuser")
@@ -186,6 +193,16 @@ public class IndexController {
 	public String deleteTelefone(@PathVariable("id") Long id) {
 		telefoneRepository.deleteById(id);
 		return "ok";
+	}
+	
+	@GetMapping(value = "/relatorio", produces = "application/text")
+	public ResponseEntity<String> downloadRelatorio(HttpServletRequest request) throws Exception {
+		
+		byte[] pdf = serviceRelatorio.gerarRelatorio("relatorio-usuario", request.getServletContext());
+		
+		String base64Pdf = "data:application/pdf;base64," + Base64.encodeBase64String(pdf);
+		
+		return new ResponseEntity<>(base64Pdf, HttpStatus.OK);
 	}
 
 }
