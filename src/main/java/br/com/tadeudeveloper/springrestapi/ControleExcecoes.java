@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -24,7 +25,7 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 	
 	// Tratamento geral (maioria dos erros)
 	@Override
-	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
+	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class, MaxUploadSizeExceededException.class})
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 		
@@ -46,38 +47,6 @@ public class ControleExcecoes extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(objetoError, headers, status);
 	}	
 	
-	@ExceptionHandler({DataIntegrityViolationException.class, ConstraintViolationException.class, PSQLException.class, SQLException.class})
-	protected ResponseEntity<Object> handleExceptionDataIntegry(Exception ex) {		
-		
-		String msg = ex.getMessage();		
-		
-		if (ex instanceof DataIntegrityViolationException) {
-			msg = ((DataIntegrityViolationException) ex).getCause().getCause().getMessage();
-			setErrorMessage(msg);
-		}
-		
-		if (ex instanceof ConstraintViolationException) {
-			msg = ((ConstraintViolationException) ex).getCause().getCause().getMessage();
-			setErrorMessage(msg) ;
-		}
-		
-		if (ex instanceof PSQLException) {
-			msg = ((PSQLException) ex).getCause().getCause().getMessage();
-			setErrorMessage(msg) ;
-		}
-		
-		if (ex instanceof SQLException) {
-			msg = ((SQLException) ex).getCause().getCause().getMessage();
-			setErrorMessage(msg);
-		}			
-		return setErrorMessage(msg);
-	}
 	
-	private ResponseEntity<Object> setErrorMessage(String msg) {
-		ObjetoError objetoError = new ObjetoError();
-		objetoError.setError(msg);
-		objetoError.setCode(HttpStatus.INTERNAL_SERVER_ERROR + " ==> " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-		return new ResponseEntity<>(objetoError, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
 
 }

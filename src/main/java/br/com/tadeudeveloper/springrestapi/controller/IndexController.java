@@ -1,6 +1,9 @@
 package br.com.tadeudeveloper.springrestapi.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.tadeudeveloper.springrestapi.model.UserReport;
 import br.com.tadeudeveloper.springrestapi.model.Usuario;
 import br.com.tadeudeveloper.springrestapi.repository.TelefoneRepository;
 import br.com.tadeudeveloper.springrestapi.repository.UsuarioRepository;
@@ -198,7 +202,27 @@ public class IndexController {
 	@GetMapping(value = "/relatorio", produces = "application/text")
 	public ResponseEntity<String> downloadRelatorio(HttpServletRequest request) throws Exception {
 		
-		byte[] pdf = serviceRelatorio.gerarRelatorio("relatorio-usuario", request.getServletContext());
+		byte[] pdf = serviceRelatorio.gerarRelatorio("relatorio-usuario", new HashMap<String, Object>(), request.getServletContext());
+		
+		String base64Pdf = "data:application/pdf;base64," + Base64.encodeBase64String(pdf);
+		
+		return new ResponseEntity<>(base64Pdf, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/relatorio/", produces = "application/text")
+	public ResponseEntity<String> downloadRelatorioParam(HttpServletRequest request, @RequestBody UserReport userReport) throws Exception {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat dateFormatParam = new SimpleDateFormat("yyy-MM-dd");
+		
+		String dataInicio = dateFormatParam.format(dateFormat.parse(userReport.getDataInicio()));
+		String dataFim = dateFormatParam.format(dateFormat.parse(userReport.getDataFim()));
+		
+		Map<String, Object> params = new HashMap<>();
+		params.put("DATA_INICIO", dataInicio);
+		params.put("DATA_FIM", dataFim);
+		
+		byte[] pdf = serviceRelatorio.gerarRelatorio("relatorio-usuario-param", params, request.getServletContext());
 		
 		String base64Pdf = "data:application/pdf;base64," + Base64.encodeBase64String(pdf);
 		

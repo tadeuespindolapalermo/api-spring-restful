@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -25,7 +25,7 @@ public class ServiceRelatorio implements Serializable {
 	@Autowired
 	private transient JdbcTemplate jdbcTemplate;
 
-	public byte[] gerarRelatorio(String nomeRelatorio, ServletContext servletContext) throws JRException, SQLException  {
+	public byte[] gerarRelatorio(String nomeRelatorio, Map<String, Object> params, ServletContext servletContext) throws JRException, SQLException  {
 
 		// Obter conexão com o banco de dados
 		try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -34,7 +34,7 @@ public class ServiceRelatorio implements Serializable {
 			String caminhoJasper = servletContext.getRealPath("relatorios") + File.separator + nomeRelatorio + ".jasper";
 	
 			// Gerar relatório com os dados e conexão
-			JasperPrint print = JasperFillManager.fillReport(caminhoJasper, new HashMap<>(), connection);
+			JasperPrint print = JasperFillManager.fillReport(caminhoJasper, params, connection);
 	
 			// Exporta para byte o PDF para fazer o download
 			return JasperExportManager.exportReportToPdf(print);			
